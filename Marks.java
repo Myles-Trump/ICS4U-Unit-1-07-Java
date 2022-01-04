@@ -2,12 +2,14 @@
 * This is a program generates marks
 * after reading in 2 text files.
 *
-* @author  Mr Coxall
+* @author  Myles Trump
 * @version 1.0
-* @since   2020-01-01
+* @since   2022-01-03
 */
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -44,14 +46,34 @@ final class Marks {
     * @param arrayOfAssignments the collection of assignments
     * @return the generated marks
     */
-    public static String[][] generateMarks(final Integer[] arrayOfStudents, 
-                                       final Integer[] arrayOfAssignments) {
+    public static String[][] generateMarks(
+        final ArrayList<String> arrayOfStudents, 
+        final ArrayList<String> arrayOfAssignments) {
 
-        // this is just a place holder!
-        String[][] markArray = { { "", "Ass #1", "Ass #2" }, 
-                           { "Sue", "76%", "88%" },
-                           { "Bob", "46%", "81%" } };
+        int index;
 
+        String[][] markArray = new String[arrayOfAssignments.size() + 1]
+            [arrayOfStudents.size() + 1];
+
+        for (index = 0; index < arrayOfAssignments.size(); index++) {
+            markArray[index + 1][0] = arrayOfAssignments.get(index);
+        }
+
+        for (index = 0; index < arrayOfStudents.size(); index++) {
+            markArray[0][index + 1] = arrayOfStudents.get(index);
+        }
+
+        // Normal Distribution numbers
+        Random random = new Random();
+
+        for (int indexX = 0; indexX < arrayOfAssignments.size();
+            indexX++) {
+            for (int indexY = 0; indexY < arrayOfStudents.size(); indexY++) {
+                int mark = (int)Math.floor(random.nextGaussian()*10+75);
+                String markString = String.valueOf(mark);
+                markArray[indexX + 1][indexY + 1] = markString + "%";
+            }
+        }
         return markArray;
     }
 
@@ -63,8 +85,8 @@ final class Marks {
     public static void main(final String[] args) {
         final ArrayList<String> listOfStudents = new ArrayList<String>();
         final ArrayList<String> listOfAssingments = new ArrayList<String>();
-        final Path studentFilePath = Paths.get("../", args[0]);
-        final Path assignmentFilePath = Paths.get("../", args[1]);
+        final Path studentFilePath = Paths.get("./", args[0]);
+        final Path assignmentFilePath = Paths.get("./", args[1]);
         final Charset charset = Charset.forName("UTF-8");
 
         try (BufferedReader readerStudent = Files.newBufferedReader(
@@ -89,16 +111,28 @@ final class Marks {
             System.err.println(errorCode);
         }
 
-        // Normal Distribution numbers
-        Random random = new Random();
+        String[][] markArray = generateMarks(listOfStudents,
+            listOfAssingments);
+        // System.out.println(Arrays.deepToString(marksArray));
 
-        for (int loopCounter = 0; loopCounter < 5; loopCounter++) {
-            int mark = (int)Math.floor(random.nextGaussian()*10+75);
-            System.out.println(mark);
+        try {
+            BufferedWriter br = new BufferedWriter(new FileWriter("marks.csv"));
+            StringBuilder sb = new StringBuilder();
+            for (int indexY = 0; indexY < markArray[0].length; indexY++) {
+                sb.setLength(0);
+                for (int indexX = 0; indexX < markArray.length; indexX++) {
+                    sb.append(markArray[indexX][indexY]);
+                    if (indexX + 1 < markArray.length) {
+                        sb.append(",");
+                    }
+                }
+                br.write(sb.toString());
+                br.newLine();
+            }
+            br.close();
+        } catch (IOException errorCode) {
+            System.err.println(errorCode);
         }
-
-        // 
-
         System.out.println("\nDone.");
     }
 }
