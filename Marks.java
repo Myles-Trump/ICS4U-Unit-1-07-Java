@@ -74,7 +74,7 @@ final class Marks {
         for (int indexX = 0; indexX < arrayOfAssignments.size();
             indexX++) {
             for (int indexY = 0; indexY < arrayOfStudents.size(); indexY++) {
-                int mark = (int)Math.floor(random.nextGaussian() * C10 + C75);
+                int mark = (int) Math.floor(random.nextGaussian() * C10 + C75);
                 String markString = String.valueOf(mark);
                 markArray[indexX + 1][indexY + 1] = markString + "%";
             }
