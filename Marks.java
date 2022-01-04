@@ -24,6 +24,15 @@ import java.util.Random;
 final class Marks {
 
     /**
+    * 10.
+    */
+    public static final int C10 = 10;
+    /**
+    * 75.
+    */
+    public static final int C75 = 75;
+
+    /**
     * Prevent instantiation
     * Throw an exception IllegalStateException.
     * if this ever is called
@@ -43,7 +52,7 @@ final class Marks {
     * @return the generated marks
     */
     public static String[][] generateMarks(
-        final ArrayList<String> arrayOfStudents, 
+        final ArrayList<String> arrayOfStudents,
         final ArrayList<String> arrayOfAssignments) {
 
         int index;
@@ -65,7 +74,7 @@ final class Marks {
         for (int indexX = 0; indexX < arrayOfAssignments.size();
             indexX++) {
             for (int indexY = 0; indexY < arrayOfStudents.size(); indexY++) {
-                int mark = (int)Math.floor(random.nextGaussian()*10+75);
+                int mark = (int)Math.floor(random.nextGaussian() * C10 + C75);
                 String markString = String.valueOf(mark);
                 markArray[indexX + 1][indexY + 1] = markString + "%";
             }
